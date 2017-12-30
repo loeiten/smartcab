@@ -46,6 +46,10 @@ class LearningAgent(Agent):
             self.epsilon = 0
             self.alpha = 0
 
+        # Ensure positive epsilon
+        if self.epsilon < 0:
+            self.epsilon = 0
+
 
     def build_state(self):
         """ The build_state function is called when the agent requests data from the
@@ -86,6 +90,10 @@ class LearningAgent(Agent):
         maxQ = tuple(key for key in self.Q[state].keys()
                      if np.isclose(self.Q[state][key], max_value))
 
+        if self.env.verbose:
+            print("self.Q[state] = {}".format(self.Q[state]))
+            print("max_value = {}".format(max_value))
+            print("maxQ = {}".format(maxQ))
         return maxQ
 
 
@@ -123,8 +131,9 @@ class LearningAgent(Agent):
         if not(self.learning):
             action = random.choice(self.valid_actions)
         else:
-            # Randomly selecting between all output states from get_maxQ
+            # Randomly selecting from output states from get_maxQ
             best_action = random.choice(self.get_maxQ(state))
+
             other_actions = [action for action in self.valid_actions\
                              if action != best_action]
             # Generate the probabilities for the different choices
@@ -136,7 +145,13 @@ class LearningAgent(Agent):
             probabilities.insert(0, 1 - self.epsilon)
             all_actions = other_actions
             all_actions.insert(0, best_action)
-            action = np.random.choice(all_actions, 1, probabilities)[0]
+            action = np.random.choice(all_actions, size=1, p=probabilities)[0]
+
+            if self.env.verbose:
+                print("best_action = {}".format(best_action))
+                print("all_actions = {}".format(all_actions))
+                print("probabilities  = {}".format(probabilities))
+                print("action = {}".format(action))
 
         return action
 
@@ -170,7 +185,6 @@ class LearningAgent(Agent):
         reward = self.env.act(self, action) # Receive a reward
         self.learn(state, action, reward)   # Q-learn
 
-        return
 
 
 def run():
@@ -183,15 +197,15 @@ def run():
     #   verbose     - set to True to display additional output from the simulation
     #   num_dummies - discrete number of dummy agents in the environment, default is 100
     #   grid_size   - discrete number of intersections (columns, rows), default is (8, 6)
-    env = Environment()
+    env = Environment(verbose=True)
 
     ##############
     # Create the driving agent
     # Flags:
-    #   learning   - set to True to force the driving agent to use Q-learning
-    #    * epsilon - continuous value for the exploration factor, default is 1
-    #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent)
+    #   learning - set to True to force the driving agent to use Q-learning
+    #   epsilon  - continuous value for the exploration factor, default is 1
+    #   alpha    - continuous value for the learning rate, default is 0.5
+    agent = env.create_agent(LearningAgent, learning=True)
 
     ##############
     # Follow the driving agent
@@ -208,14 +222,13 @@ def run():
     #   log_metrics  - set to True to log trial and simulation results to /logs
     #   optimized    - set to True to change the default log file name
     # sim = Simulator(env)
-    sim = Simulator(env, update_delay=0.01, log_metrics=True)
+    sim = Simulator(env, update_delay=0.0, log_metrics=True)
 
     ##############
     # Run the simulator
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05
     #   n_test     - discrete number of testing trials to perform, default is 0
-    # sim.run()
     sim.run(n_test=10)
 
 
