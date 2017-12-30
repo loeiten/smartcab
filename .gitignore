@@ -100,9 +100,6 @@ ENV/
 # mypy
 .mypy_cache/
 
-# smartcab project
-logs/
-
 # vim
 *.swp
 *.swo
