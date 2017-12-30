@@ -1,7 +1,6 @@
 import random
-from environment import Agent, Environment
+from environment import Agent
 from planner import RoutePlanner
-from simulator import Simulator
 import numpy as np
 
 class LearningAgent(Agent):
@@ -24,31 +23,8 @@ class LearningAgent(Agent):
         ###########
         # Set any additional class parameters as needed
 
-
-    def reset(self, destination=None, testing=False):
-        """ The reset function is called at the beginning of each trial.
-            'testing' is set to True if testing trials are being used
-            once training trials have completed. """
-
-        # Select the destination as the new location to route to
-        self.planner.route_to(destination)
-
-        ###########
-        ## TO DO ##
-        ###########
-        # Update epsilon using a decay function of your choice
-        # Update additional class parameters as needed
-        # If 'testing' is True, set epsilon and alpha to 0
-        if not testing:
-            # epsilon_{t+1} = epsilon_{t} - 0.05
-            self.epsilon -= 0.05
-        else:
-            self.epsilon = 0
-            self.alpha = 0
-
-        # Ensure positive epsilon
-        if self.epsilon < 0:
-            self.epsilon = 0
+        # Initialize the time step variable
+        self.t = 0
 
 
     def build_state(self):
@@ -185,53 +161,6 @@ class LearningAgent(Agent):
         reward = self.env.act(self, action) # Receive a reward
         self.learn(state, action, reward)   # Q-learn
 
-
-
-def run():
-    """ Driving function for running the simulation.
-        Press ESC to close the simulation, or [SPACE] to pause the simulation. """
-
-    ##############
-    # Create the environment
-    # Flags:
-    #   verbose     - set to True to display additional output from the simulation
-    #   num_dummies - discrete number of dummy agents in the environment, default is 100
-    #   grid_size   - discrete number of intersections (columns, rows), default is (8, 6)
-    env = Environment(verbose=True)
-
-    ##############
-    # Create the driving agent
-    # Flags:
-    #   learning - set to True to force the driving agent to use Q-learning
-    #   epsilon  - continuous value for the exploration factor, default is 1
-    #   alpha    - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent, learning=True)
-
-    ##############
-    # Follow the driving agent
-    # Flags:
-    #   enforce_deadline - set to True to enforce a deadline metric
-    # env.set_primary_agent(agent)
-    env.set_primary_agent(agent, enforce_deadline=True)
-
-    ##############
-    # Create the simulation
-    # Flags:
-    #   update_delay - continuous time (in seconds) between actions, default is 2.0 seconds
-    #   display      - set to False to disable the GUI if PyGame is enabled
-    #   log_metrics  - set to True to log trial and simulation results to /logs
-    #   optimized    - set to True to change the default log file name
-    # sim = Simulator(env)
-    sim = Simulator(env, update_delay=0.0, log_metrics=True)
-
-    ##############
-    # Run the simulator
-    # Flags:
-    #   tolerance  - epsilon tolerance before beginning testing, default is 0.05
-    #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test=10)
-
-
-if __name__ == '__main__':
-    run()
+        # Update the time step
+        self.t += 1
 
