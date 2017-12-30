@@ -23,8 +23,9 @@ class LearningAgent(Agent):
         ###########
         # Set any additional class parameters as needed
 
-        # Initialize the time step variable
-        self.t = 0
+        # Initialize the trial variable
+        # NOTE: We start at 1 in order to avoid negative powers
+        self.t = 1
 
 
     def build_state(self):
@@ -160,7 +161,4 @@ class LearningAgent(Agent):
         action = self.choose_action(state)  # Choose an action
         reward = self.env.act(self, action) # Receive a reward
         self.learn(state, action, reward)   # Q-learn
-
-        # Update the time step
-        self.t += 1
 

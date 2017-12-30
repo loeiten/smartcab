@@ -4,9 +4,11 @@ from smartcab.environment import Environment
 
 
 def reset(self, destination=None, testing=False):
-    """ The reset function is called at the beginning of each trial.
-        'testing' is set to True if testing trials are being used
-        once training trials have completed. """
+    """
+    The reset function is called at the beginning of each trial.
+    'testing' is set to True if testing trials are being used once training
+    trials have completed.
+    """
 
     # Select the destination as the new location to route to
     self.planner.route_to(destination)
@@ -24,9 +26,10 @@ def reset(self, destination=None, testing=False):
 
 
 def run():
-    """ Driving function for running the simulation.
-        Press ESC to close the simulation, or [SPACE] to pause the simulation. """
-
+    """
+    Driving function for running the simulation.
+    Press ESC to close the simulation, or [SPACE] to pause the simulation.
+    """
 
     # Add the reset function to LearningAgent
     LearningAgent.reset = reset
