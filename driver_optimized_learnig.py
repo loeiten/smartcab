@@ -49,7 +49,7 @@ def reset_exp(self, destination=None, testing=False):
 
 
 def reset_cos(self, destination=None, testing=False):
-    a = 0.01
+    a = 0.005
 
     # Select the destination as the new location to route to
     self.planner.route_to(destination)
@@ -92,7 +92,7 @@ def run(name, reset, alpha, tolerance):
     sim = Simulator(env, update_delay=0.01, display=False, log_metrics=True,
                     optimized=True)
     # Run the simulator
-    sim.run(tolerance=tolerance, n_test=10)
+    sim.run(tolerance=tolerance, n_test=100)
 
     # Rename the output files
     logs_dir = pathlib.Path(__file__).parent.joinpath("logs")
@@ -112,8 +112,8 @@ def main():
         (
             ("pot_high_alpha", reset_pot, 0.75, 0.05),
             ("pot_low_alpha", reset_pot, 0.25, 0.05),
-            ("inv_t_high_alpha", reset_inv_t, 0.75, 0.05),
-            ("inv_t_low_alpha", reset_inv_t, 0.25, 0.05),
+            ("inv_t_high_alpha", reset_inv_t, 0.75, 1e-5),
+            ("inv_t_low_alpha", reset_inv_t, 0.25, 1e-5),
             ("exp_high_alpha", reset_exp, 0.75, 0.05),
             ("exp_low_alpha", reset_exp, 0.25, 0.05),
             ("cos_high_alpha", reset_cos, 0.75, 0.05),
