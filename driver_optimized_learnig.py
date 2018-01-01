@@ -63,6 +63,22 @@ def reset_cos(self, destination=None, testing=False):
     self.t += 1
 
 
+def reset_sig(self, destination=None, testing=False):
+    a = 0.1
+    t0 = 150
+
+    # Select the destination as the new location to route to
+    self.planner.route_to(destination)
+
+    if not testing:
+        self.epsilon = 1.0 - (1.0/(1.0+np.exp(-a*(t-t0))))
+    else:
+        self.epsilon = 0
+        self.alpha = 0
+
+    self.t += 1
+
+
 def run(name, reset, alpha, tolerance):
     """
     Executes the run
@@ -118,6 +134,8 @@ def main():
             ("exp_low_alpha", reset_exp, 0.25, 0.05),
             ("cos_high_alpha", reset_cos, 0.75, 0.05),
             ("cos_low_alpha", reset_cos, 0.25, 0.05),
+            ("sig_high_alpha", reset_sig, 0.75, 0.05),
+            ("sig_low_alpha", reset_sig, 0.25, 0.05),
         )
 
     # Call the run function
