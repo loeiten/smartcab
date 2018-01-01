@@ -26,7 +26,6 @@ class LearningAgent(Agent):
         # Initialize the trial variable
         # NOTE: We start at 1 in order to avoid negative powers
         self.t = 1
-        random.seed(42)
 
 
     def build_state(self):

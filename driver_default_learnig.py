@@ -1,7 +1,12 @@
 from smartcab.agent import LearningAgent
 from smartcab.simulator import Simulator
 from smartcab.environment import Environment
+import numpy as np
+import random
 
+# Set global random seed
+random.seed(42)
+np.random.seed(42)
 
 def reset(self, destination=None, testing=False):
     """
@@ -35,7 +40,7 @@ def run():
     LearningAgent.reset = reset
 
     # Create the environment
-    env = Environment(verbose=True)
+    env = Environment()
     # Create the driving agent
     agent = env.create_agent(LearningAgent, learning=True)
     # Follow the driving agent

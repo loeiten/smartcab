@@ -1,6 +1,10 @@
 from smartcab.agent import LearningAgent
 from smartcab.simulator import Simulator
 from smartcab.environment import Environment
+import random
+
+# Set global random seed
+random.seed(42)
 
 
 def reset(self, destination=None, testing=False):

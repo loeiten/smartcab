@@ -3,7 +3,11 @@ from smartcab.simulator import Simulator
 from smartcab.environment import Environment
 import numpy as np
 import pathlib
+import random
 
+# Set global random seed
+random.seed(42)
+np.random.seed(42)
 
 def reset_pot(self, destination=None, testing=False):
     a = 0.99
@@ -71,7 +75,7 @@ def reset_sig(self, destination=None, testing=False):
     self.planner.route_to(destination)
 
     if not testing:
-        self.epsilon = 1.0 - (1.0/(1.0+np.exp(-a*(t-t0))))
+        self.epsilon = 1.0 - (1.0/(1.0+np.exp(-a*(self.t-t0))))
     else:
         self.epsilon = 0
         self.alpha = 0
@@ -134,8 +138,8 @@ def main():
             ("exp_low_alpha", reset_exp, 0.25, 0.05),
             ("cos_high_alpha", reset_cos, 0.75, 0.05),
             ("cos_low_alpha", reset_cos, 0.25, 0.05),
-            ("sig_high_alpha", reset_sig, 0.75, 0.05),
-            ("sig_low_alpha", reset_sig, 0.25, 0.05),
+            ("sig_high_alpha", reset_sig, 0.75, 3e-7),
+            ("sig_low_alpha", reset_sig, 0.25, 3e-7),
         )
 
     # Call the run function
